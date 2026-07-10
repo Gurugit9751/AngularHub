@@ -1,0 +1,49 @@
+<header class="header">
+  <!-- Logo -->
+
+  <div class="logo">
+    <span class="title"> EnterpriseApp </span>
+  </div>
+
+  <!-- Navigation -->
+
+  <!-- <nav class="menu">
+    <a routerLink="/home" routerLinkActive="active"> Home </a>
+
+    <a routerLink="/docs/angular/components" routerLinkActive="active"> Angular </a>
+
+    <a routerLink="/docs/rxjs/observable" routerLinkActive="active"> RxJS </a>
+
+    <a routerLink="/docs/material/table" routerLinkActive="active"> Material </a>
+
+    <a routerLink="/docs/api/users" routerLinkActive="active"> API </a>
+  </nav> -->
+
+  @for (menu of menus; track $index) {
+    <a routerLink="{{ menu.route }}">
+      {{ menu.title }}
+    </a>
+  }
+
+  <div class="right-section">
+    <!-- Search -->
+
+    <div class="search-box">
+      <mat-icon>search</mat-icon>
+
+      <input type="text" placeholder="Search concepts" />
+    </div>
+
+    <!-- Github -->
+
+    <button mat-stroked-button>
+      <mat-icon>code</mat-icon>
+
+      GitHub
+    </button>
+
+    <!-- Login -->
+
+    <button mat-flat-button color="primary">Login</button>
+  </div>
+</header>
