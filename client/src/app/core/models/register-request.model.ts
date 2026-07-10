@@ -1,7 +1,6 @@
-export interface User {
-  _id?: string;
+export interface RegisterRequest {
   firstName: string;
   lastName: string;
   email: string;
-  role: string;
+  password: string;
 }
