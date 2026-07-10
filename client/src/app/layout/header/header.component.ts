@@ -1,33 +1,55 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Output,
+  inject
+} from '@angular/core';
 
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { Router } from '@angular/router';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { HEADER_MENU } from '../../core/data/header-menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
-    CommonModule,
-    RouterLink,
-    RouterLinkActive,
-    MatToolbarModule,
     MatButtonModule,
     MatIconModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatButtonModule,
-MatIconModule
+    MatToolbarModule,
+    MatTooltipModule
   ],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrl: './header.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent {
-  menus = HEADER_MENU;
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
+  @Output()
+  readonly menuToggle = new EventEmitter<void>();
+
+  readonly currentUser =
+    this.authService.currentUser;
+
+  toggleMenu(): void {
+    this.menuToggle.emit();
+  }
+
+  logout(): void {
+    this.authService.logout();
+
+    void this.router.navigateByUrl(
+      '/auth/login',
+      {
+        replaceUrl: true
+      }
+    );
+  }
 }

@@ -1,23 +1,18 @@
-import {
-  Injectable,
-  PLATFORM_ID,
-  inject
-} from '@angular/core';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 
 import { isPlatformBrowser } from '@angular/common';
 
 interface JwtPayload {
-  exp?: number;
-  iat?: number;
   sub?: string;
-  id?: string;
   userId?: string;
   email?: string;
   role?: string;
+  iat?: number;
+  exp?: number;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TokenService {
   private readonly platformId = inject(PLATFORM_ID);
@@ -37,10 +32,7 @@ export class TokenService {
       return;
     }
 
-    localStorage.setItem(
-      this.TOKEN_KEY,
-      token
-    );
+    localStorage.setItem(this.TOKEN_KEY, token);
   }
 
   removeToken(): void {
@@ -51,46 +43,50 @@ export class TokenService {
     localStorage.removeItem(this.TOKEN_KEY);
   }
 
-  isAuthenticated(): boolean {
+  getValidToken(): string | null {
     const token = this.getToken();
 
     if (!token) {
-      return false;
+      return null;
     }
 
     if (this.isTokenExpired(token)) {
       this.removeToken();
-      return false;
+      return null;
     }
 
-    return true;
+    return token;
+  }
+
+  isAuthenticated(): boolean {
+    return Boolean(this.getValidToken());
   }
 
   isTokenExpired(token: string): boolean {
     const payload = this.decodeToken(token);
 
-    /*
-     * If the token cannot be decoded, treat it as invalid.
-     */
     if (!payload) {
       return true;
     }
 
     /*
-     * Some development tokens may not contain exp.
-     * In that case, existence of the token is accepted.
+     * The backend should normally provide exp.
+     * Tokens without exp remain supported for development.
      */
-    if (!payload.exp) {
+    if (typeof payload.exp !== 'number') {
       return false;
     }
 
-    const currentTimeInSeconds =
-      Math.floor(Date.now() / 1000);
+    const currentTime = Math.floor(Date.now() / 1000);
 
-    return payload.exp <= currentTimeInSeconds;
+    return payload.exp <= currentTime;
   }
 
   decodeToken(token?: string): JwtPayload | null {
+    if (!this.isBrowser()) {
+      return null;
+    }
+
     const currentToken = token ?? this.getToken();
 
     if (!currentToken) {
@@ -104,32 +100,11 @@ export class TokenService {
         return null;
       }
 
-      const base64Url = tokenParts[1];
+      const payloadPart = tokenParts[1].replace(/-/g, '+').replace(/_/g, '/');
 
-      const base64 = base64Url
-        .replace(/-/g, '+')
-        .replace(/_/g, '/');
+      const normalizedPayload = payloadPart.padEnd(Math.ceil(payloadPart.length / 4) * 4, '=');
 
-      const normalizedBase64 = base64.padEnd(
-        Math.ceil(base64.length / 4) * 4,
-        '='
-      );
-
-      const decodedPayload = decodeURIComponent(
-        atob(normalizedBase64)
-          .split('')
-          .map((character) => {
-            const hexValue = character
-              .charCodeAt(0)
-              .toString(16)
-              .padStart(2, '0');
-
-            return `%${hexValue}`;
-          })
-          .join('')
-      );
-
-      return JSON.parse(decodedPayload) as JwtPayload;
+      return JSON.parse(atob(normalizedPayload)) as JwtPayload;
     } catch {
       return null;
     }

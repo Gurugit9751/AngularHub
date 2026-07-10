@@ -1,40 +1,30 @@
-<mat-accordion multi>
+<div class="sidebar-header">
+  <mat-icon>hub</mat-icon>
 
-  @for(menu of menus; track menu.title){
+  <span>AngularHub</span>
+</div>
 
-    <mat-expansion-panel>
+<mat-nav-list>
+  @for (
+    item of visibleNavigationItems();
+    track item.route
+  ) {
+    <a
+      mat-list-item
+      [routerLink]="item.route"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{
+        exact: true
+      }"
+      (click)="onNavigationSelected()"
+    >
+      <mat-icon matListItemIcon>
+        {{ item.icon }}
+      </mat-icon>
 
-      <mat-expansion-panel-header>
-
-        <mat-panel-title>
-
-          <mat-icon>{{menu.icon}}</mat-icon>
-
-          {{menu.title}}
-
-        </mat-panel-title>
-
-      </mat-expansion-panel-header>
-
-      <mat-nav-list>
-
-        @for(item of menu.children; track item.title){
-
-          <a
-            mat-list-item
-            [routerLink]="item.route"
-            routerLinkActive="active-link">
-
-            {{item.title}}
-
-          </a>
-
-        }
-
-      </mat-nav-list>
-
-    </mat-expansion-panel>
-
+      <span matListItemTitle>
+        {{ item.label }}
+      </span>
+    </a>
   }
-
-</mat-accordion>
+</mat-nav-list>

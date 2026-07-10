@@ -1,36 +1,46 @@
-<header class="header">
-  <!-- Logo -->
+<mat-toolbar class="app-header">
+  <button
+    mat-icon-button
+    type="button"
+    aria-label="Toggle navigation menu"
+    matTooltip="Menu"
+    (click)="toggleMenu()"
+  >
+    <mat-icon>menu</mat-icon>
+  </button>
 
-  <div class="logo">
-    <span class="title"> EnterpriseApp </span>
-  </div>
+  <a class="brand" href="/dashboard">
+    AngularHub
+  </a>
 
-  <!-- Navigation -->
-  @for (menu of menus; track $index) {
-    <a routerLink="{{ menu.route }}" routerLinkActive="active">
-      {{ menu.title }}
-    </a>
+  <span class="toolbar-spacer"></span>
+
+  @if (currentUser(); as user) {
+    <div class="user-summary">
+      <div class="user-avatar">
+        {{ user.firstName.charAt(0) }}
+        {{ user.lastName.charAt(0) }}
+      </div>
+
+      <div class="user-information">
+        <span class="user-name">
+          {{ user.firstName }} {{ user.lastName }}
+        </span>
+
+        <span class="user-role">
+          {{ user.role }}
+        </span>
+      </div>
+    </div>
   }
 
-  <div class="right-section">
-    <!-- Search -->
-
-    <div class="search-box">
-      <mat-icon>search</mat-icon>
-
-      <input type="text" placeholder="Search concepts" />
-    </div>
-
-    <!-- Github -->
-
-    <button mat-stroked-button>
-      <mat-icon>code</mat-icon>
-
-      GitHub
-    </button>
-
-    <!-- Login -->
-
-    <button mat-flat-button color="primary">Login</button>
-  </div>
-</header>
+  <button
+    mat-icon-button
+    type="button"
+    aria-label="Logout"
+    matTooltip="Logout"
+    (click)="logout()"
+  >
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>

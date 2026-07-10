@@ -1,19 +1,25 @@
-<app-header></app-header>
+<mat-sidenav-container class="layout-container">
+  <mat-sidenav
+    #drawer
+    class="application-sidebar"
+    [mode]="isMobile() ? 'over' : 'side'"
+    [opened]="!isMobile()"
+    [fixedInViewport]="isMobile()"
+  >
+    <app-sidebar
+      (navigationSelected)="
+        closeSidebarOnMobile(drawer)
+      "
+    ></app-sidebar>
+  </mat-sidenav>
 
-<div class="layout">
+  <mat-sidenav-content>
+    <app-header
+      (menuToggle)="drawer.toggle()"
+    ></app-header>
 
-     @if (showSidebar) {
-    <app-sidebar></app-sidebar>
-  }
-
-    <main class="content">
-
-        <router-outlet></router-outlet>
-
+    <main class="page-content">
+      <router-outlet></router-outlet>
     </main>
-
-</div>
-<app-footer></app-footer>
-
-
-
+  </mat-sidenav-content>
+</mat-sidenav-container>

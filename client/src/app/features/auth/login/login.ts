@@ -10,15 +10,15 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 import { finalize } from 'rxjs';
 
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 
-import { AuthService } from '../../../core/services/auth.service';
 import { LoginRequest } from '../../../core/models/login-request.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -27,12 +27,12 @@ import { LoginRequest } from '../../../core/models/login-request.model';
     CommonModule,
     ReactiveFormsModule,
     RouterLink,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatButtonModule,
+    MatCardModule,
     MatCheckboxModule,
+    MatFormFieldModule,
     MatIconModule,
+    MatInputModule,
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
@@ -76,6 +76,7 @@ export class Login {
 
     const request: LoginRequest = {
       email: formValue.email.trim().toLowerCase(),
+
       password: formValue.password,
     };
 
@@ -90,17 +91,45 @@ export class Login {
       )
       .subscribe({
         next: () => {
-          const returnUrl =
-            this.activatedRoute.snapshot.queryParamMap.get('returnUrl') ?? '/dashboard';
-
-          void this.router.navigateByUrl(returnUrl);
+          void this.router.navigateByUrl(this.getSafeReturnUrl(), {
+            replaceUrl: true,
+          });
         },
 
-        error: (error: HttpErrorResponse) => {
-          console.error('Login failed:', error);
-
-          this.loginError.set(error.error?.message ?? 'Invalid email or password.');
+        error: (error: unknown) => {
+          this.loginError.set(this.getErrorMessage(error));
         },
       });
+  }
+
+  private getSafeReturnUrl(): string {
+    const returnUrl = this.activatedRoute.snapshot.queryParamMap.get('returnUrl');
+
+    if (
+      returnUrl &&
+      returnUrl.startsWith('/') &&
+      !returnUrl.startsWith('//') &&
+      !returnUrl.startsWith('/auth/login')
+    ) {
+      return returnUrl;
+    }
+
+    return '/dashboard';
+  }
+
+  private getErrorMessage(error: unknown): string {
+    if (error instanceof HttpErrorResponse) {
+      if (error.status === 0) {
+        return 'Unable to connect to the server.';
+      }
+
+      return error.error?.message ?? 'Invalid email or password.';
+    }
+
+    if (error instanceof Error) {
+      return error.message;
+    }
+
+    return 'Login failed. Please try again.';
   }
 }

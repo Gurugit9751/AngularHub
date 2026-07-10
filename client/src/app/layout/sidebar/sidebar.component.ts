@@ -1,35 +1,45 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Output,
+  computed,
+  inject,
+} from '@angular/core';
+
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
-import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MENU_DATA } from '../../core/data/menu';
-import { MenuItem } from '../../core/models/menu.model';
+
+import { NAVIGATION_ITEMS } from '../../core/data/navigation.data';
+
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    RouterLinkActive,
-    MatExpansionModule,
-    MatIconModule,
-    MatListModule,
-    MatInputModule,
-    MatFormFieldModule
-  ],
+  imports: [RouterLink, RouterLinkActive, MatIconModule, MatListModule],
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+  styleUrl: './sidebar.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SidebarComponent {
+export class Sidebar {
+  private readonly authService = inject(AuthService);
 
-  searchText = '';
+  @Output()
+  readonly navigationSelected = new EventEmitter<void>();
 
-menus: MenuItem[] = MENU_DATA;
+  readonly visibleNavigationItems = computed(() => {
+    /*
+     * Register the current-user signal as a dependency.
+     */
+    this.authService.currentUser();
 
+    return NAVIGATION_ITEMS.filter((item) => this.authService.hasPermission(item.permission));
+  });
+
+  onNavigationSelected(): void {
+    this.navigationSelected.emit();
+  }
 }
