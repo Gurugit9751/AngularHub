@@ -1,0 +1,32 @@
+<section>
+
+    <h1>Users API</h1>
+
+    <p>
+        Manage users using DummyJSON endpoints.
+    </p>
+
+    <div class="endpoint">
+
+        GET https://dummyjson.com/users
+
+    </div>
+
+    <button
+        mat-raised-button
+        color="primary"
+        (click)="loadUsers()">
+
+        Show Output
+
+    </button>
+
+</section>
+
+<section class="output">
+
+    <h2>Response</h2>
+
+    <pre>{{ users | json }}</pre>
+
+</section>
