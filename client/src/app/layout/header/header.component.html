@@ -1,0 +1,36 @@
+<header class="header">
+  <!-- Logo -->
+
+  <div class="logo">
+    <span class="title"> EnterpriseApp </span>
+  </div>
+
+  <!-- Navigation -->
+  @for (menu of menus; track $index) {
+    <a routerLink="{{ menu.route }}" routerLinkActive="active">
+      {{ menu.title }}
+    </a>
+  }
+
+  <div class="right-section">
+    <!-- Search -->
+
+    <div class="search-box">
+      <mat-icon>search</mat-icon>
+
+      <input type="text" placeholder="Search concepts" />
+    </div>
+
+    <!-- Github -->
+
+    <button mat-stroked-button>
+      <mat-icon>code</mat-icon>
+
+      GitHub
+    </button>
+
+    <!-- Login -->
+
+    <button mat-flat-button color="primary">Login</button>
+  </div>
+</header>

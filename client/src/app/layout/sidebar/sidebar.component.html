@@ -1,0 +1,40 @@
+<mat-accordion multi>
+
+  @for(menu of menus; track menu.title){
+
+    <mat-expansion-panel>
+
+      <mat-expansion-panel-header>
+
+        <mat-panel-title>
+
+          <mat-icon>{{menu.icon}}</mat-icon>
+
+          {{menu.title}}
+
+        </mat-panel-title>
+
+      </mat-expansion-panel-header>
+
+      <mat-nav-list>
+
+        @for(item of menu.children; track item.title){
+
+          <a
+            mat-list-item
+            [routerLink]="item.route"
+            routerLinkActive="active-link">
+
+            {{item.title}}
+
+          </a>
+
+        }
+
+      </mat-nav-list>
+
+    </mat-expansion-panel>
+
+  }
+
+</mat-accordion>

@@ -1,0 +1,115 @@
+<div class="login-container">
+
+    <mat-card class="login-card">
+
+        <h1>AngularHub</h1>
+
+        <p>Welcome Back</p>
+
+        <form
+            [formGroup]="loginForm"
+            (ngSubmit)="login()">
+
+            <mat-form-field appearance="outline">
+
+                <mat-label>Email</mat-label>
+
+                <input
+                    matInput
+                    type="email"
+                    formControlName="email">
+
+                @if(loginForm.controls['email'].hasError('required')){
+
+                    <mat-error>
+
+                        Email is required
+
+                    </mat-error>
+
+                }
+
+                @if(loginForm.controls['email'].hasError('email')){
+
+                    <mat-error>
+
+                        Invalid Email
+
+                    </mat-error>
+
+                }
+
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+
+                <mat-label>Password</mat-label>
+
+                <input
+                    matInput
+                    [type]="hidePassword() ? 'password' : 'text'"
+                    formControlName="password">
+
+                <button
+                    mat-icon-button
+                    matSuffix
+                    type="button"
+                    (click)="togglePassword()">
+
+                    <mat-icon>
+
+                        {{hidePassword() ? 'visibility_off' : 'visibility'}}
+
+                    </mat-icon>
+
+                </button>
+
+                @if(loginForm.controls['password'].hasError('required')){
+
+                    <mat-error>
+
+                        Password is required
+
+                    </mat-error>
+
+                }
+
+            </mat-form-field>
+
+            <mat-checkbox
+                formControlName="rememberMe">
+
+                Remember Me
+
+            </mat-checkbox>
+
+            <button
+                mat-raised-button
+                color="primary"
+                class="login-btn">
+
+                Login
+
+            </button>
+
+        </form>
+
+        <div class="links">
+
+            <a routerLink="/forgot-password">
+
+                Forgot Password?
+
+            </a>
+
+            <a routerLink="/register">
+
+                Create Account
+
+            </a>
+
+        </div>
+
+    </mat-card>
+
+</div>
