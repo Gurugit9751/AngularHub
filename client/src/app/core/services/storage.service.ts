@@ -1,29 +1,72 @@
-import { Injectable } from '@angular/core';
+import {
+  Injectable,
+  PLATFORM_ID,
+  inject
+} from '@angular/core';
+
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
+  private readonly platformId = inject(PLATFORM_ID);
 
-  set(key: string, value: unknown): void {
-    localStorage.setItem(key, JSON.stringify(value));
+  set<T>(key: string, value: T): void {
+    if (!this.isBrowser()) {
+      return;
+    }
+
+    localStorage.setItem(
+      key,
+      JSON.stringify(value)
+    );
   }
 
   get<T>(key: string): T | null {
-    const value = localStorage.getItem(key);
-
-    if (!value) {
+    if (!this.isBrowser()) {
       return null;
     }
 
-    return JSON.parse(value) as T;
+    const storedValue = localStorage.getItem(key);
+
+    if (!storedValue) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(storedValue) as T;
+    } catch {
+      this.remove(key);
+      return null;
+    }
   }
 
   remove(key: string): void {
+    if (!this.isBrowser()) {
+      return;
+    }
+
     localStorage.removeItem(key);
   }
 
   clear(): void {
+    if (!this.isBrowser()) {
+      return;
+    }
+
     localStorage.clear();
+  }
+
+  has(key: string): boolean {
+    if (!this.isBrowser()) {
+      return false;
+    }
+
+    return localStorage.getItem(key) !== null;
+  }
+
+  private isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId);
   }
 }
