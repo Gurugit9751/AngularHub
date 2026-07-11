@@ -1,8 +1,8 @@
-const authService = require("../services/auth.service");
-const User = require("../models/user.model");
+const authService = require('../services/auth.service');
+const User = require('../models/user.model');
 
-const asyncHandler = require("../utils/asyncHandler");
-const ApiResponse = require("../utils/apiResponse");
+const asyncHandler = require('../utils/asyncHandler');
+const ApiResponse = require('../utils/apiResponse');
 
 const register = asyncHandler(async (req, res) => {
   const user = await authService.register(req.body);
@@ -10,7 +10,7 @@ const register = asyncHandler(async (req, res) => {
   ApiResponse.success(
     res,
 
-    "User Registered Successfully",
+    'User Registered Successfully',
 
     user,
 
@@ -28,7 +28,7 @@ const login = asyncHandler(async (req, res) => {
   ApiResponse.success(
     res,
 
-    "Login Successful",
+    'Login Successful',
 
     result,
   );
@@ -37,12 +37,12 @@ const login = asyncHandler(async (req, res) => {
 const profile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user.id)
 
-    .select("-password");
+    .select('-password');
 
   ApiResponse.success(
     res,
 
-    "Profile Details",
+    'Profile Details',
 
     user,
   );
@@ -61,18 +61,18 @@ const updateProfile = asyncHandler(async (req, res) => {
     {
       new: true,
     },
-  ).select("-password");
+  ).select('-password');
 
   ApiResponse.success(
     res,
 
-    "Profile Updated Successfully",
+    'Profile Updated Successfully',
 
     user,
   );
 });
 
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
 
 const changePassword = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user.id);
@@ -84,7 +84,7 @@ const changePassword = asyncHandler(async (req, res) => {
   );
 
   if (!match) {
-    throw new Error("Current Password Incorrect");
+    throw new Error('Current Password Incorrect');
   }
 
   user.password = await bcrypt.hash(
@@ -98,7 +98,7 @@ const changePassword = asyncHandler(async (req, res) => {
   ApiResponse.success(
     res,
 
-    "Password Changed Successfully",
+    'Password Changed Successfully',
   );
 });
 
@@ -107,5 +107,5 @@ module.exports = {
   login,
   profile,
   updateProfile,
-  changePassword
+  changePassword,
 };

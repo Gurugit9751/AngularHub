@@ -2,8 +2,9 @@ const express = require("express");
 const cors = require("cors");
 
 const authRoutes = require("./routes/auth.routes");
-
+const userRoutes = require('./routes/user.routes');
 const errorHandler = require("./middleware/error.middleware");
+
 
 const app = express();
 
@@ -20,7 +21,8 @@ app.get("/", (req, res) => {
   });
 });
 
-app.use("/api/auth", authRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 /*
 404 Route
