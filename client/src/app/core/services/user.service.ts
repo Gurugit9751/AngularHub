@@ -17,6 +17,7 @@ import {
   UserListData,
   UserListQuery,
   UserRole,
+  UserStatistics,
 } from '../models/user.model';
 
 @Injectable({
@@ -30,18 +31,12 @@ export class UserService {
   private readonly authApiUrl = `${environment.apiUrl}/auth`;
 
   /**
-   * Backward-compatible user-list method.
-   *
-   * Returns the first page containing 10 users.
-   * The paginated admin screen will use getUsersPage().
+   * Backward-compatible list method.
    */
   getUsers(): Observable<User[]> {
     return this.getUsersPage().pipe(map((result) => result.users));
   }
 
-  /**
-   * Returns users with pagination information.
-   */
   getUsersPage(query: UserListQuery = {}): Observable<UserListData> {
     let params = new HttpParams()
       .set('page', String(query.page ?? 1))
@@ -65,21 +60,18 @@ export class UserService {
     );
   }
 
-  /**
-   * Returns one user by MongoDB ID.
-   */
   getUserById(userId: string): Observable<User> {
     return this.http
       .get<ApiResponse<UserApiModel>>(`${this.usersApiUrl}/${userId}`)
       .pipe(map((response) => this.normalizeUser(response.data)));
   }
 
-  /**
-   * Updates a user's role.
-   *
-   * Angular uses admin/user.
-   * Backend uses Admin/User.
-   */
+  getStatistics(): Observable<UserStatistics> {
+    return this.http
+      .get<ApiResponse<UserStatistics>>(`${this.usersApiUrl}/statistics`)
+      .pipe(map((response) => response.data));
+  }
+
   updateUserRole(userId: string, role: UserRole): Observable<User> {
     return this.http
       .patch<ApiResponse<UserApiModel>>(`${this.usersApiUrl}/${userId}/role`, {
@@ -88,9 +80,6 @@ export class UserService {
       .pipe(map((response) => this.normalizeUser(response.data)));
   }
 
-  /**
-   * Deletes a user.
-   */
   deleteUser(userId: string): Observable<DeletedUserData> {
     return this.http
       .delete<ApiResponse<DeletedUserData>>(`${this.usersApiUrl}/${userId}`)
@@ -99,9 +88,7 @@ export class UserService {
 
   /**
    * Preserved for backward compatibility.
-   *
-   * Profile continues using the existing /api/auth/profile
-   * endpoint rather than /api/users/profile.
+   * Profile belongs to the authentication API.
    */
   getProfile(): Observable<User> {
     return this.http

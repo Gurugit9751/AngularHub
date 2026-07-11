@@ -19,6 +19,106 @@
     </div>
   </header>
 
+  @if (isAdmin()) {
+    <section class="admin-statistics">
+      <div class="section-heading">
+        <div>
+          <p class="dashboard-label">
+            Administration
+          </p>
+
+          <h2>User overview</h2>
+        </div>
+
+        <button
+          mat-icon-button
+          type="button"
+          aria-label="Refresh statistics"
+          [disabled]="statisticsLoading()"
+          (click)="loadStatistics()"
+        >
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+
+      @if (statisticsLoading()) {
+        <div class="statistics-state">
+          <mat-spinner
+            diameter="34"
+          ></mat-spinner>
+
+          <span>
+            Loading statistics...
+          </span>
+        </div>
+      } @else if (statisticsError()) {
+        <div class="statistics-error">
+          <mat-icon>error_outline</mat-icon>
+
+          <span>
+            User statistics could not be loaded.
+          </span>
+
+          <button
+            mat-button
+            type="button"
+            (click)="loadStatistics()"
+          >
+            Retry
+          </button>
+        </div>
+      } @else if (statistics(); as stats) {
+        <div class="statistics-grid">
+          <mat-card class="statistics-card">
+            <mat-icon>groups</mat-icon>
+
+            <div>
+              <span>Total users</span>
+              <strong>
+                {{ stats.totalUsers }}
+              </strong>
+            </div>
+          </mat-card>
+
+          <mat-card class="statistics-card">
+            <mat-icon>
+              admin_panel_settings
+            </mat-icon>
+
+            <div>
+              <span>Administrators</span>
+              <strong>
+                {{ stats.totalAdmins }}
+              </strong>
+            </div>
+          </mat-card>
+
+          <mat-card class="statistics-card">
+            <mat-icon>person</mat-icon>
+
+            <div>
+              <span>Normal users</span>
+              <strong>
+                {{ stats.totalRegularUsers }}
+              </strong>
+            </div>
+          </mat-card>
+
+          <mat-card class="statistics-card">
+            <mat-icon>person_add</mat-icon>
+
+            <div>
+              <span>New in 30 days</span>
+              <strong>
+                {{ stats.recentRegistrations }}
+              </strong>
+            </div>
+          </mat-card>
+        </div>
+      }
+    </section>
+  }
+
   <div class="dashboard-grid">
     <mat-card class="dashboard-card">
       <mat-icon>person</mat-icon>

@@ -1,0 +1,47 @@
+<div class="delete-dialog">
+  <div class="delete-icon">
+    <mat-icon>delete_forever</mat-icon>
+  </div>
+
+  <h2 mat-dialog-title>
+    Delete user?
+  </h2>
+
+  <mat-dialog-content>
+    <p>
+      You are about to permanently delete
+      <strong>
+        {{ data.user.firstName }}
+        {{ data.user.lastName }}
+      </strong>.
+    </p>
+
+    <p class="email">
+      {{ data.user.email }}
+    </p>
+
+    <p class="warning">
+      This action cannot be undone.
+    </p>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      type="button"
+      [mat-dialog-close]="false"
+    >
+      Cancel
+    </button>
+
+    <button
+      mat-flat-button
+      type="button"
+      class="delete-button"
+      [mat-dialog-close]="true"
+    >
+      <mat-icon>delete</mat-icon>
+      Delete user
+    </button>
+  </mat-dialog-actions>
+</div>

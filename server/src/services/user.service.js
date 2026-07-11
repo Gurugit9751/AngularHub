@@ -1,6 +1,9 @@
 const User = require('../models/user.model');
 
-const createHttpError = (message, statusCode) => {
+const createHttpError = (
+    message,
+    statusCode
+) => {
     const error = new Error(message);
     error.statusCode = statusCode;
 
@@ -8,7 +11,10 @@ const createHttpError = (message, statusCode) => {
 };
 
 const escapeRegex = (value = '') => {
-    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return value.replace(
+        /[.*+?^${}()|[\]\\]/g,
+        '\\$&'
+    );
 };
 
 class UserService {
@@ -18,29 +24,40 @@ class UserService {
         search = '',
         role = ''
     }) {
-        const pageNumber = Math.max(Number(page) || 1, 1);
+        const pageNumber =
+            Math.max(Number(page) || 1, 1);
 
-        const limitNumber = Math.min(
-            Math.max(Number(limit) || 10, 1),
-            100
-        );
+        const limitNumber =
+            Math.min(
+                Math.max(Number(limit) || 10, 1),
+                100
+            );
 
-        const skip = (pageNumber - 1) * limitNumber;
+        const skip =
+            (pageNumber - 1) * limitNumber;
 
         const filter = {};
 
-        const trimmedSearch = search.trim();
+        const trimmedSearch =
+            search.trim();
 
         if (trimmedSearch) {
-            const searchExpression = new RegExp(
-                escapeRegex(trimmedSearch),
-                'i'
-            );
+            const searchExpression =
+                new RegExp(
+                    escapeRegex(trimmedSearch),
+                    'i'
+                );
 
             filter.$or = [
-                { firstName: searchExpression },
-                { lastName: searchExpression },
-                { email: searchExpression }
+                {
+                    firstName: searchExpression
+                },
+                {
+                    lastName: searchExpression
+                },
+                {
+                    email: searchExpression
+                }
             ];
         }
 
@@ -48,16 +65,19 @@ class UserService {
             filter.role = role;
         }
 
-        const [users, total] = await Promise.all([
-            User.find(filter)
-                .select('-password')
-                .sort({ createdAt: -1 })
-                .skip(skip)
-                .limit(limitNumber)
-                .lean(),
+        const [users, total] =
+            await Promise.all([
+                User.find(filter)
+                    .select('-password -__v')
+                    .sort({
+                        createdAt: -1
+                    })
+                    .skip(skip)
+                    .limit(limitNumber)
+                    .lean(),
 
-            User.countDocuments(filter)
-        ]);
+                User.countDocuments(filter)
+            ]);
 
         return {
             users,
@@ -65,21 +85,65 @@ class UserService {
                 page: pageNumber,
                 limit: limitNumber,
                 total,
-                totalPages: Math.ceil(total / limitNumber)
+                totalPages:
+                    Math.ceil(total / limitNumber)
             }
         };
     }
 
     async getUserById(userId) {
-        const user = await User.findById(userId)
-            .select('-password')
-            .lean();
+        const user =
+            await User.findById(userId)
+                .select('-password -__v')
+                .lean();
 
         if (!user) {
-            throw createHttpError('User not found', 404);
+            throw createHttpError(
+                'User not found',
+                404
+            );
         }
 
         return user;
+    }
+
+    async getStatistics() {
+        const thirtyDaysAgo =
+            new Date();
+
+        thirtyDaysAgo.setDate(
+            thirtyDaysAgo.getDate() - 30
+        );
+
+        const [
+            totalUsers,
+            totalAdmins,
+            totalRegularUsers,
+            recentRegistrations
+        ] = await Promise.all([
+            User.countDocuments(),
+
+            User.countDocuments({
+                role: 'Admin'
+            }),
+
+            User.countDocuments({
+                role: 'User'
+            }),
+
+            User.countDocuments({
+                createdAt: {
+                    $gte: thirtyDaysAgo
+                }
+            })
+        ]);
+
+        return {
+            totalUsers,
+            totalAdmins,
+            totalRegularUsers,
+            recentRegistrations
+        };
     }
 
     async updateUserRole({
@@ -88,28 +152,38 @@ class UserService {
         currentAdminId
     }) {
         const isCurrentAdmin =
-            String(userId) === String(currentAdminId);
+            String(userId) ===
+            String(currentAdminId);
 
-        if (isCurrentAdmin && role !== 'Admin') {
+        if (
+            isCurrentAdmin &&
+            role !== 'Admin'
+        ) {
             throw createHttpError(
                 'You cannot remove your own admin role',
                 400
             );
         }
 
-        const user = await User.findByIdAndUpdate(
-            userId,
-            { role },
-            {
-                new: true,
-                runValidators: true
-            }
-        )
-            .select('-password')
-            .lean();
+        const user =
+            await User.findByIdAndUpdate(
+                userId,
+                {
+                    role
+                },
+                {
+                    new: true,
+                    runValidators: true
+                }
+            )
+                .select('-password -__v')
+                .lean();
 
         if (!user) {
-            throw createHttpError('User not found', 404);
+            throw createHttpError(
+                'User not found',
+                404
+            );
         }
 
         return user;
@@ -120,7 +194,8 @@ class UserService {
         currentAdminId
     }) {
         const isCurrentAdmin =
-            String(userId) === String(currentAdminId);
+            String(userId) ===
+            String(currentAdminId);
 
         if (isCurrentAdmin) {
             throw createHttpError(
@@ -129,18 +204,24 @@ class UserService {
             );
         }
 
-        const user = await User.findById(userId)
-            .select('_id')
-            .lean();
+        const user =
+            await User.findById(userId)
+                .select('_id')
+                .lean();
 
         if (!user) {
-            throw createHttpError('User not found', 404);
+            throw createHttpError(
+                'User not found',
+                404
+            );
         }
 
-        await User.deleteOne({ _id: userId });
+        await User.deleteOne({
+            _id: userId
+        });
 
         return {
-            id: userId
+            id: String(userId)
         };
     }
 }

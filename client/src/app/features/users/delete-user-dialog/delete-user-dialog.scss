@@ -1,0 +1,52 @@
+.delete-dialog {
+  padding-top: 8px;
+}
+
+.delete-icon {
+  display: flex;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 8px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #fee2e2;
+  color: #dc2626;
+
+  mat-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 30px;
+  }
+}
+
+h2 {
+  text-align: center;
+}
+
+mat-dialog-content {
+  max-width: 430px;
+  text-align: center;
+
+  p {
+    color: #475569;
+    line-height: 1.6;
+  }
+}
+
+.email {
+  margin: 8px 0;
+  color: #0f172a !important;
+  font-weight: 600;
+}
+
+.warning {
+  color: #dc2626 !important;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.delete-button {
+  background: #dc2626 !important;
+  color: #ffffff !important;
+}

@@ -40,6 +40,13 @@ export interface UserApiListData {
   pagination: UserPagination;
 }
 
+export interface UserStatistics {
+  totalUsers: number;
+  totalAdmins: number;
+  totalRegularUsers: number;
+  recentRegistrations: number;
+}
+
 export interface DeletedUserData {
   id: string;
 }

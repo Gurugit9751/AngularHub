@@ -1,0 +1,136 @@
+<div class="details-dialog">
+  <div class="profile-header">
+    <div class="avatar">
+      {{ initials }}
+    </div>
+
+    <div>
+      <h2 mat-dialog-title>
+        {{ data.user.firstName }}
+        {{ data.user.lastName }}
+      </h2>
+
+      <p>{{ data.user.email }}</p>
+    </div>
+  </div>
+
+  <mat-dialog-content>
+    <div class="details-grid">
+      <div class="detail-item">
+        <span class="detail-label">
+          <mat-icon>badge</mat-icon>
+          User ID
+        </span>
+
+        <span class="detail-value user-id">
+          {{ data.user._id }}
+        </span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">
+          <mat-icon>person</mat-icon>
+          First name
+        </span>
+
+        <span class="detail-value">
+          {{ data.user.firstName }}
+        </span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">
+          <mat-icon>
+            person_outline
+          </mat-icon>
+          Last name
+        </span>
+
+        <span class="detail-value">
+          {{ data.user.lastName }}
+        </span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">
+          <mat-icon>email</mat-icon>
+          Email
+        </span>
+
+        <span class="detail-value">
+          {{ data.user.email }}
+        </span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">
+          <mat-icon>
+            admin_panel_settings
+          </mat-icon>
+          Role
+        </span>
+
+        <span
+          class="role-badge"
+          [class.admin-role]="
+            data.user.role === 'admin'
+          "
+        >
+          {{
+            data.user.role === 'admin'
+              ? 'Admin'
+              : 'User'
+          }}
+        </span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">
+          <mat-icon>
+            calendar_today
+          </mat-icon>
+          Created
+        </span>
+
+        <span class="detail-value">
+          @if (data.user.createdAt) {
+            {{
+              data.user.createdAt
+                | date: 'medium'
+            }}
+          } @else {
+            Not available
+          }
+        </span>
+      </div>
+
+      <div class="detail-item">
+        <span class="detail-label">
+          <mat-icon>update</mat-icon>
+          Last updated
+        </span>
+
+        <span class="detail-value">
+          @if (data.user.updatedAt) {
+            {{
+              data.user.updatedAt
+                | date: 'medium'
+            }}
+          } @else {
+            Not available
+          }
+        </span>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      mat-flat-button
+      type="button"
+      mat-dialog-close
+    >
+      Close
+    </button>
+  </mat-dialog-actions>
+</div>

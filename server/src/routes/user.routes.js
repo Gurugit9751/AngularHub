@@ -24,11 +24,6 @@ const validate = require(
 
 const router = express.Router();
 
-/*
- * Every /api/users endpoint requires:
- * 1. A valid JWT token
- * 2. Admin role
- */
 router.use(
     authenticate,
     authorize('Admin')
@@ -45,7 +40,9 @@ router.get(
         query('limit')
             .optional()
             .isInt({ min: 1, max: 100 })
-            .withMessage('Limit must be between 1 and 100'),
+            .withMessage(
+                'Limit must be between 1 and 100'
+            ),
 
         query('search')
             .optional({ checkFalsy: true })
@@ -59,10 +56,21 @@ router.get(
         query('role')
             .optional({ checkFalsy: true })
             .isIn(['Admin', 'User'])
-            .withMessage('Role must be Admin or User')
+            .withMessage(
+                'Role must be Admin or User'
+            )
     ],
     validate,
     userController.getUsers
+);
+
+/*
+ * IMPORTANT:
+ * Static routes must be above /:id
+ */
+router.get(
+    '/statistics',
+    userController.getStatistics
 );
 
 router.get(
@@ -70,7 +78,9 @@ router.get(
     [
         param('id')
             .isMongoId()
-            .withMessage('Valid user ID is required')
+            .withMessage(
+                'Valid user ID is required'
+            )
     ],
     validate,
     userController.getUserById
@@ -81,11 +91,15 @@ router.patch(
     [
         param('id')
             .isMongoId()
-            .withMessage('Valid user ID is required'),
+            .withMessage(
+                'Valid user ID is required'
+            ),
 
         body('role')
             .isIn(['Admin', 'User'])
-            .withMessage('Role must be Admin or User')
+            .withMessage(
+                'Role must be Admin or User'
+            )
     ],
     validate,
     userController.updateUserRole
@@ -96,7 +110,9 @@ router.delete(
     [
         param('id')
             .isMongoId()
-            .withMessage('Valid user ID is required')
+            .withMessage(
+                'Valid user ID is required'
+            )
     ],
     validate,
     userController.deleteUser
