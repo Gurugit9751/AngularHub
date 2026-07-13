@@ -10,11 +10,12 @@ import { AuthService } from '../../core/services/auth.service';
 
 import { HeaderComponent } from '../header/header.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { FooterComponent } from '../footer/footer.component';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, SidebarComponent],
+  imports: [RouterOutlet, HeaderComponent, SidebarComponent, FooterComponent],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,11 +46,4 @@ export class LayoutComponent {
 
     return this.isDocumentationPage();
   });
-
-  readonly layoutClass = computed(() => ({
-    'with-sidebar': this.showSidebar(),
-    'admin-layout': this.isAdmin(),
-    'documentation-layout': !this.isAdmin() && this.isDocumentationPage(),
-    'home-layout': !this.isAdmin() && !this.isDocumentationPage(),
-  }));
 }

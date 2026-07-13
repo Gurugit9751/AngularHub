@@ -3,6 +3,7 @@ import {
   Component,
   DestroyRef,
   OnInit,
+  computed,
   inject,
   signal,
 } from '@angular/core';
@@ -21,7 +22,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UserStatistics } from '../../core/models/user.model';
 
 import { AuthService } from '../../core/services/auth.service';
-
 import { UserService } from '../../core/services/user.service';
 
 import { HasPermissionDirective } from '../../shared/directives/has-permission.directive';
@@ -43,20 +43,36 @@ import { HasPermissionDirective } from '../../shared/directives/has-permission.d
 })
 export class Dashboard implements OnInit {
   private readonly authService = inject(AuthService);
-
   private readonly userService = inject(UserService);
-
   private readonly destroyRef = inject(DestroyRef);
 
   readonly currentUser = this.authService.currentUser;
-
   readonly isAdmin = this.authService.isAdmin;
 
   readonly statistics = signal<UserStatistics | null>(null);
 
   readonly statisticsLoading = signal(false);
-
   readonly statisticsError = signal(false);
+
+  readonly regularUserPercentage = computed(() => {
+    const stats = this.statistics();
+
+    if (!stats || stats.totalUsers === 0) {
+      return 0;
+    }
+
+    return Math.round((stats.totalRegularUsers / stats.totalUsers) * 100);
+  });
+
+  readonly adminPercentage = computed(() => {
+    const stats = this.statistics();
+
+    if (!stats || stats.totalUsers === 0) {
+      return 0;
+    }
+
+    return Math.round((stats.totalAdmins / stats.totalUsers) * 100);
+  });
 
   ngOnInit(): void {
     if (this.isAdmin()) {

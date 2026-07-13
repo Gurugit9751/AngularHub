@@ -1,59 +1,108 @@
-<mat-toolbar class="main-header">
-  <a class="brand" [routerLink]="isAdmin() ? '/dashboard' : '/home'" aria-label="AngularHub home">
-    <span class="brand-logo">A</span>
+<header class="application-header">
+  <mat-toolbar class="header-toolbar">
+    <a
+      class="brand"
+      [routerLink]="isAdmin() ? '/dashboard' : '/home'"
+      aria-label="TechMaster Academy home"
+    >
+      <span class="brand-mark">A</span>
+      <span class="brand-name">TechMaster Academy</span>
+    </a>
 
-    <span class="brand-name"> AngularHub </span>
-  </a>
-
-  <nav class="header-navigation" aria-label="Main navigation">
-    @if (isAdmin()) {
-      @for (item of adminHeaderMenu; track item.route) {
-        <a
-          mat-button
-          class="header-menu-link"
-          [routerLink]="item.route"
-          routerLinkActive="active-header-menu"
-        >
-          {{ item.label }}
-        </a>
-      }
-    } @else {
-      @for (item of userHeaderMenu; track item.route) {
-        <a
-          mat-button
-          class="header-menu-link"
-          [routerLink]="item.route"
-          routerLinkActive="active-header-menu"
-          [routerLinkActiveOptions]="{
-            exact: item.exact ?? false,
-          }"
-        >
-          {{ item.label }}
-        </a>
-      }
+    @if (!isAdmin()) {
+      <nav class="documentation-navigation" aria-label="Documentation navigation">
+        @for (item of userHeaderMenu; track item.route) {
+          <a
+            mat-button
+            class="navigation-link"
+            [routerLink]="item.route"
+            routerLinkActive="active-navigation-link"
+            [routerLinkActiveOptions]="{
+              exact: item.exact ?? false,
+            }"
+          >
+            {{ item.label }}
+          </a>
+        }
+      </nav>
     }
-  </nav>
 
-  <span class="header-spacer"></span>
+    <span class="header-spacer"></span>
 
-  <button
-    mat-icon-button
-    type="button"
-    [matMenuTriggerFor]="accountMenu"
-    aria-label="Open account menu"
-  >
-    <mat-icon>account_circle</mat-icon>
-  </button>
+    <div class="header-actions">
+      <button
+        mat-icon-button
+        type="button"
+        class="notification-button"
+        matTooltip="Notifications"
+        aria-label="Notifications"
+      >
+        <mat-icon>notifications_none</mat-icon>
+        <span class="notification-indicator"></span>
+      </button>
 
-  <mat-menu #accountMenu="matMenu">
-    <button mat-menu-item routerLink="/profile">
-      <mat-icon>person</mat-icon>
-      <span>Profile</span>
-    </button>
+      <button
+        type="button"
+        class="account-button"
+        [matMenuTriggerFor]="accountMenu"
+        aria-label="Open account menu"
+      >
+        <span class="account-avatar">
+          {{ initials() }}
+        </span>
 
-    <button mat-menu-item type="button" (click)="logout()">
-      <mat-icon>logout</mat-icon>
-      <span>Logout</span>
-    </button>
-  </mat-menu>
-</mat-toolbar>
+        <span class="account-information">
+          <strong>{{ displayName() }}</strong>
+
+          <small>
+            {{ isAdmin() ? 'Administrator' : 'User' }}
+          </small>
+        </span>
+
+        <mat-icon class="account-chevron"> expand_more </mat-icon>
+      </button>
+    </div>
+
+    <mat-menu #accountMenu="matMenu" xPosition="before" panelClass="account-menu-panel">
+      <div class="account-menu-header" (click)="$event.stopPropagation()">
+        <span class="menu-avatar">
+          {{ initials() }}
+        </span>
+
+        <div class="menu-user-details">
+          <strong>{{ fullName() }}</strong>
+
+          <span>
+            {{ isAdmin() ? 'Administrator' : 'User' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="account-menu-divider"></div>
+
+      <button mat-menu-item routerLink="/profile" class="account-menu-item">
+        <mat-icon>person_outline</mat-icon>
+        <span>My Profile</span>
+      </button>
+
+      @if (isAdmin()) {
+        <button mat-menu-item routerLink="/settings" class="account-menu-item">
+          <mat-icon>settings</mat-icon>
+          <span>Settings</span>
+        </button>
+      }
+
+      <div class="account-menu-divider"></div>
+
+      <button
+        mat-menu-item
+        type="button"
+        class="account-menu-item logout-menu-item"
+        (click)="logout()"
+      >
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+  </mat-toolbar>
+</header>

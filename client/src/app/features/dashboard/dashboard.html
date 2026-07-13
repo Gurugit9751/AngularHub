@@ -1,180 +1,290 @@
 <section class="dashboard-page">
-  <header class="dashboard-header">
-    <div>
-      <p class="dashboard-label">
-        Overview
-      </p>
+  <section class="welcome-banner">
+    <div class="welcome-content">
+      <div class="welcome-badge">
+        <mat-icon>verified</mat-icon>
+        <span>Administrator workspace</span>
+      </div>
 
       <h1>
         @if (currentUser(); as user) {
-          Welcome, {{ user.firstName }}
+          Welcome back, {{ user.firstName }}
         } @else {
-          Welcome to AngularHub
+          Welcome back
         }
+        <span class="welcome-wave">👋</span>
       </h1>
 
       <p>
-        Manage your account and application features.
+        Monitor users, manage permissions and control your AngularHub administration from one place.
       </p>
+
+      <div class="welcome-actions">
+        <a
+          mat-flat-button
+          class="primary-action"
+          routerLink="/users"
+          *appHasPermission="'users.view'"
+        >
+          <mat-icon>group</mat-icon>
+          Manage users
+        </a>
+
+        <a mat-button class="secondary-action" routerLink="/profile">
+          View my profile
+          <mat-icon>arrow_forward</mat-icon>
+        </a>
+      </div>
     </div>
-  </header>
+
+    <div class="welcome-visual" aria-hidden="true">
+      <div class="visual-orbit orbit-one"></div>
+      <div class="visual-orbit orbit-two"></div>
+
+      <div class="visual-icon">
+        <mat-icon>dashboard_customize</mat-icon>
+      </div>
+
+      <div class="floating-chip chip-users">
+        <mat-icon>groups</mat-icon>
+        Users
+      </div>
+
+      <div class="floating-chip chip-security">
+        <mat-icon>shield</mat-icon>
+        Secure
+      </div>
+    </div>
+  </section>
 
   @if (isAdmin()) {
     <section class="admin-statistics">
       <div class="section-heading">
         <div>
-          <p class="dashboard-label">
-            Administration
-          </p>
+          <p class="section-eyebrow">Live overview</p>
 
-          <h2>User overview</h2>
+          <h2>Platform statistics</h2>
+
+          <p class="section-description">Current account and registration information.</p>
         </div>
 
         <button
           mat-icon-button
+          class="refresh-button"
           type="button"
           aria-label="Refresh statistics"
           [disabled]="statisticsLoading()"
           (click)="loadStatistics()"
         >
-          <mat-icon>refresh</mat-icon>
+          <mat-icon [class.rotating]="statisticsLoading()"> refresh </mat-icon>
         </button>
       </div>
 
       @if (statisticsLoading()) {
         <div class="statistics-state">
-          <mat-spinner
-            diameter="34"
-          ></mat-spinner>
+          <mat-spinner diameter="36" />
 
-          <span>
-            Loading statistics...
-          </span>
+          <div>
+            <strong>Loading statistics</strong>
+            <span> Fetching the latest platform details... </span>
+          </div>
         </div>
       } @else if (statisticsError()) {
         <div class="statistics-error">
-          <mat-icon>error_outline</mat-icon>
+          <div class="error-icon">
+            <mat-icon>error_outline</mat-icon>
+          </div>
 
-          <span>
-            User statistics could not be loaded.
-          </span>
+          <div>
+            <strong> Statistics could not be loaded </strong>
 
-          <button
-            mat-button
-            type="button"
-            (click)="loadStatistics()"
-          >
-            Retry
-          </button>
+            <span> Check the API connection and try again. </span>
+          </div>
+
+          <button mat-stroked-button type="button" (click)="loadStatistics()">Retry</button>
         </div>
       } @else if (statistics(); as stats) {
         <div class="statistics-grid">
-          <mat-card class="statistics-card">
-            <mat-icon>groups</mat-icon>
+          <article class="statistics-card users-card">
+            <div class="stat-card-top">
+              <div class="stat-icon">
+                <mat-icon>groups</mat-icon>
+              </div>
 
-            <div>
-              <span>Total users</span>
-              <strong>
+              <span class="stat-badge"> All accounts </span>
+            </div>
+
+            <div class="stat-card-content">
+              <span class="stat-label"> Total users </span>
+
+              <strong class="stat-value">
                 {{ stats.totalUsers }}
               </strong>
+
+              <span class="stat-description"> Registered AngularHub accounts </span>
             </div>
-          </mat-card>
 
-          <mat-card class="statistics-card">
-            <mat-icon>
-              admin_panel_settings
-            </mat-icon>
+            <div class="stat-decoration"></div>
+          </article>
 
-            <div>
-              <span>Administrators</span>
-              <strong>
+          <article class="statistics-card admins-card">
+            <div class="stat-card-top">
+              <div class="stat-icon">
+                <mat-icon> admin_panel_settings </mat-icon>
+              </div>
+
+              <span class="stat-badge"> {{ adminPercentage() }}% of total </span>
+            </div>
+
+            <div class="stat-card-content">
+              <span class="stat-label"> Administrators </span>
+
+              <strong class="stat-value">
                 {{ stats.totalAdmins }}
               </strong>
+
+              <span class="stat-description"> Accounts with admin privileges </span>
             </div>
-          </mat-card>
 
-          <mat-card class="statistics-card">
-            <mat-icon>person</mat-icon>
+            <div class="stat-decoration"></div>
+          </article>
 
-            <div>
-              <span>Normal users</span>
-              <strong>
+          <article class="statistics-card regular-card">
+            <div class="stat-card-top">
+              <div class="stat-icon">
+                <mat-icon>person</mat-icon>
+              </div>
+
+              <span class="stat-badge"> {{ regularUserPercentage() }}% of total </span>
+            </div>
+
+            <div class="stat-card-content">
+              <span class="stat-label"> Normal users </span>
+
+              <strong class="stat-value">
                 {{ stats.totalRegularUsers }}
               </strong>
+
+              <span class="stat-description"> Standard documentation users </span>
             </div>
-          </mat-card>
 
-          <mat-card class="statistics-card">
-            <mat-icon>person_add</mat-icon>
+            <div class="stat-decoration"></div>
+          </article>
 
-            <div>
-              <span>New in 30 days</span>
-              <strong>
+          <article class="statistics-card recent-card">
+            <div class="stat-card-top">
+              <div class="stat-icon">
+                <mat-icon>person_add</mat-icon>
+              </div>
+
+              <span class="stat-badge"> Last 30 days </span>
+            </div>
+
+            <div class="stat-card-content">
+              <span class="stat-label"> New registrations </span>
+
+              <strong class="stat-value">
                 {{ stats.recentRegistrations }}
               </strong>
+
+              <span class="stat-description"> Recently created user accounts </span>
             </div>
-          </mat-card>
+
+            <div class="stat-decoration"></div>
+          </article>
         </div>
       }
     </section>
   }
 
-  <div class="dashboard-grid">
-    <mat-card class="dashboard-card">
-      <mat-icon>person</mat-icon>
+  <section class="workspace-section">
+    <div class="section-heading">
+      <div>
+        <p class="section-eyebrow">Administration</p>
 
-      <h2>My Profile</h2>
+        <h2>Workspace shortcuts</h2>
+
+        <p class="section-description">Quickly access frequently used administration areas.</p>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <mat-card class="dashboard-card profile-card">
+        <div class="card-icon-wrapper">
+          <mat-icon>account_circle</mat-icon>
+        </div>
+
+        <div class="card-content">
+          <span class="card-category"> Account </span>
+
+          <h3>My Profile</h3>
+
+          <p>Review your personal information, account details and assigned role.</p>
+        </div>
+
+        <a mat-button class="card-action" routerLink="/profile">
+          Open profile
+          <mat-icon>arrow_forward</mat-icon>
+        </a>
+      </mat-card>
+
+      <mat-card *appHasPermission="'users.view'" class="dashboard-card users-management-card">
+        <div class="card-icon-wrapper">
+          <mat-icon>manage_accounts</mat-icon>
+        </div>
+
+        <div class="card-content">
+          <span class="card-category"> Administration </span>
+
+          <h3>User Management</h3>
+
+          <p>Search users, review roles and manage active AngularHub accounts.</p>
+        </div>
+
+        <a mat-button class="card-action" routerLink="/users">
+          Manage users
+          <mat-icon>arrow_forward</mat-icon>
+        </a>
+      </mat-card>
+
+      <mat-card *appHasPermission="'settings.view'" class="dashboard-card settings-card">
+        <div class="card-icon-wrapper">
+          <mat-icon>settings_suggest</mat-icon>
+        </div>
+
+        <div class="card-content">
+          <span class="card-category"> Configuration </span>
+
+          <h3>Settings</h3>
+
+          <p>Configure application preferences and administration options.</p>
+        </div>
+
+        <a mat-button class="card-action" routerLink="/settings">
+          Open settings
+          <mat-icon>arrow_forward</mat-icon>
+        </a>
+      </mat-card>
+    </div>
+  </section>
+
+  <section class="dashboard-footer-panel">
+    <div class="footer-panel-icon">
+      <mat-icon>security</mat-icon>
+    </div>
+
+    <div>
+      <h3>AngularHub administration is protected</h3>
 
       <p>
-        View your personal and account information.
+        Access to this workspace is controlled by JWT authentication, role guards and
+        permission-based navigation.
       </p>
+    </div>
 
-      <a
-        mat-stroked-button
-        routerLink="/profile"
-      >
-        Open Profile
-      </a>
-    </mat-card>
-
-    <mat-card
-      *appHasPermission="'users.view'"
-      class="dashboard-card"
-    >
-      <mat-icon>group</mat-icon>
-
-      <h2>User Management</h2>
-
-      <p>
-        Manage AngularHub users and their roles.
-      </p>
-
-      <a
-        mat-stroked-button
-        routerLink="/users"
-      >
-        Manage Users
-      </a>
-    </mat-card>
-
-    <mat-card
-      *appHasPermission="'settings.view'"
-      class="dashboard-card"
-    >
-      <mat-icon>settings</mat-icon>
-
-      <h2>Settings</h2>
-
-      <p>
-        Configure application administration settings.
-      </p>
-
-      <a
-        mat-stroked-button
-        routerLink="/settings"
-      >
-        Open Settings
-      </a>
-    </mat-card>
-  </div>
+    <span class="security-status">
+      <span class="status-dot"></span>
+      Secure
+    </span>
+  </section>
 </section>

@@ -75,11 +75,6 @@ export const ADMIN_HEADER_MENU: readonly HeaderMenuItem[] = [
     route: '/users',
     icon: 'group',
   },
-  {
-    label: 'Settings',
-    route: '/settings',
-    icon: 'settings',
-  },
 ];
 
 export const ADMIN_SIDEBAR_MENU = ADMIN_HEADER_MENU;

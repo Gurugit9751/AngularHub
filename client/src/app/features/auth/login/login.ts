@@ -105,16 +105,30 @@ export class Login {
   private getSafeReturnUrl(): string {
     const returnUrl = this.activatedRoute.snapshot.queryParamMap.get('returnUrl');
 
+    const defaultRoute = this.authService.isAdmin() ? '/dashboard' : '/home';
+
     if (
-      returnUrl &&
-      returnUrl.startsWith('/') &&
-      !returnUrl.startsWith('//') &&
-      !returnUrl.startsWith('/auth/login')
+      !returnUrl ||
+      !returnUrl.startsWith('/') ||
+      returnUrl.startsWith('//') ||
+      returnUrl.startsWith('/auth/login')
     ) {
-      return returnUrl;
+      return defaultRoute;
     }
 
-    return '/dashboard';
+    const isAdminRoute =
+      returnUrl === '/dashboard' ||
+      returnUrl.startsWith('/dashboard/') ||
+      returnUrl === '/users' ||
+      returnUrl.startsWith('/users/') ||
+      returnUrl === '/settings' ||
+      returnUrl.startsWith('/settings/');
+
+    if (!this.authService.isAdmin() && isAdminRoute) {
+      return '/home';
+    }
+
+    return returnUrl;
   }
 
   private getErrorMessage(error: unknown): string {

@@ -1,32 +1,269 @@
-<section>
-
-    <h1>Users API</h1>
-
-    <p>
-        Manage users using DummyJSON endpoints.
-    </p>
-
-    <div class="endpoint">
-
-        GET https://dummyjson.com/users
-
+<div class="home-page">
+  <section class="hero-section">
+    <div class="hero-background">
+      <span class="hero-orb orb-one"></span>
+      <span class="hero-orb orb-two"></span>
+      <span class="hero-orb orb-three"></span>
     </div>
 
-    <button
-        mat-raised-button
-        color="primary"
-        (click)="loadUsers()">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <mat-icon>auto_awesome</mat-icon>
+        <span>Modern Full-Stack Learning Portal</span>
+      </div>
 
-        Show Output
+      <h1>
+        Build stronger skills with
+        <span>TechMaster Academy</span>
+      </h1>
 
-    </button>
+      <p class="hero-description">
+        Learn HTML, JavaScript, Angular, RxJS, Node.js and MongoDB through structured documentation,
+        practical examples and enterprise-level development concepts.
+      </p>
 
-</section>
+      <div class="hero-actions">
+        <a mat-flat-button class="primary-button" routerLink="/docs/angular/introduction">
+          <mat-icon>school</mat-icon>
+          Start Learning
+        </a>
 
-<section class="output">
+        <a mat-stroked-button class="secondary-button" routerLink="/docs/javascript/introduction">
+          Explore JavaScript
+          <mat-icon>arrow_forward</mat-icon>
+        </a>
+      </div>
 
-    <h2>Response</h2>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <strong>6</strong>
+          <span>Technology tracks</span>
+        </div>
 
-    <pre>{{ users | json }}</pre>
+        <div class="stat-divider"></div>
 
-</section>
+        <div class="hero-stat">
+          <strong>50+</strong>
+          <span>Core concepts</span>
+        </div>
+
+        <div class="stat-divider"></div>
+
+        <div class="hero-stat">
+          <strong>100%</strong>
+          <span>Practical learning</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <div class="code-window">
+        <div class="window-toolbar">
+          <span class="window-dot red-dot"></span>
+          <span class="window-dot yellow-dot"></span>
+          <span class="window-dot green-dot"></span>
+
+          <span class="window-title"> tech-master.component.ts </span>
+        </div>
+
+        <div class="code-content">
+          <div class="code-line">
+            <span class="code-keyword">import</span>
+            <span class="code-text"> &#123; Component &#125; </span>
+            <span class="code-keyword">from</span>
+            <span class="code-string"> '@angular/core';</span>
+          </div>
+
+          <div class="code-line empty-line"></div>
+
+          <div class="code-line">
+            <span class="code-decorator">@Component</span>
+            <span class="code-text">(&#123;</span>
+          </div>
+
+          <div class="code-line indented">
+            <span class="code-property">selector:</span>
+            <span class="code-string"> 'app-angular-hub',</span>
+          </div>
+
+          <div class="code-line indented">
+            <span class="code-property">standalone:</span>
+            <span class="code-boolean"> true,</span>
+          </div>
+
+          <div class="code-line indented">
+            <span class="code-property">template:</span>
+            <span class="code-string"> 'Learn. Build. Grow.'</span>
+          </div>
+
+          <div class="code-line">
+            <span class="code-text">&#125;)</span>
+          </div>
+
+          <div class="code-line">
+            <span class="code-keyword">export class</span>
+            <span class="code-class"> AngularHub</span>
+            <span class="code-text"> &#123;&#125;</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="floating-card floating-angular">
+        <mat-icon>change_history</mat-icon>
+        <span>Angular 21</span>
+      </div>
+
+      <div class="floating-card floating-rxjs">
+        <mat-icon>swap_horiz</mat-icon>
+        <span>RxJS</span>
+      </div>
+
+      <div class="floating-card floating-node">
+        <mat-icon>dns</mat-icon>
+        <span>Node.js</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="technology-section">
+    <div class="section-heading">
+      <span class="section-label">Learning tracks</span>
+
+      <h2>Choose your technology</h2>
+
+      <p>
+        Start with the technology you want to learn and move through clearly structured
+        documentation topics.
+      </p>
+    </div>
+
+    <div class="technology-grid">
+      @for (technology of technologies; track technology.title) {
+        <a class="technology-card" [class]="technology.className" [routerLink]="technology.route">
+          <div class="technology-icon">
+            <mat-icon>{{ technology.icon }}</mat-icon>
+          </div>
+
+          <div class="technology-content">
+            <h3>{{ technology.title }}</h3>
+            <p>{{ technology.description }}</p>
+          </div>
+
+          <div class="technology-link">
+            <span>Start learning</span>
+            <mat-icon>arrow_forward</mat-icon>
+          </div>
+        </a>
+      }
+    </div>
+  </section>
+
+  <section class="features-section">
+    <div class="section-heading">
+      <span class="section-label">Why AngularHub</span>
+
+      <h2>Designed for real-world developers</h2>
+
+      <p>
+        Learn concepts that help you build applications, improve architecture and prepare for
+        technical interviews.
+      </p>
+    </div>
+
+    <div class="features-grid">
+      @for (feature of features; track feature.title) {
+        <article class="feature-card">
+          <div class="feature-icon">
+            <mat-icon>{{ feature.icon }}</mat-icon>
+          </div>
+
+          <h3>{{ feature.title }}</h3>
+
+          <p>{{ feature.description }}</p>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="learning-path-section">
+    <div class="learning-path-content">
+      <span class="section-label">Recommended path</span>
+
+      <h2>From frontend basics to full-stack development</h2>
+
+      <p>
+        Follow a guided path that moves from web fundamentals to Angular, reactive programming,
+        backend APIs and databases.
+      </p>
+
+      <a mat-flat-button class="learning-path-button" routerLink="/docs/html/introduction">
+        Begin the learning path
+        <mat-icon>arrow_forward</mat-icon>
+      </a>
+    </div>
+
+    <div class="learning-path">
+      <div class="path-item">
+        <span class="path-number">01</span>
+        <div>
+          <strong>HTML</strong>
+          <small>Web structure</small>
+        </div>
+      </div>
+
+      <mat-icon class="path-arrow">arrow_forward</mat-icon>
+
+      <div class="path-item">
+        <span class="path-number">02</span>
+        <div>
+          <strong>JavaScript</strong>
+          <small>Programming fundamentals</small>
+        </div>
+      </div>
+
+      <mat-icon class="path-arrow">arrow_forward</mat-icon>
+
+      <div class="path-item">
+        <span class="path-number">03</span>
+        <div>
+          <strong>Angular & RxJS</strong>
+          <small>Frontend applications</small>
+        </div>
+      </div>
+
+      <mat-icon class="path-arrow">arrow_forward</mat-icon>
+
+      <div class="path-item">
+        <span class="path-number">04</span>
+        <div>
+          <strong>Node & MongoDB</strong>
+          <small>Backend development</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="cta-decoration cta-decoration-one"></div>
+    <div class="cta-decoration cta-decoration-two"></div>
+
+    <div class="cta-content">
+      <div class="cta-icon">
+        <mat-icon>rocket_launch</mat-icon>
+      </div>
+
+      <div>
+        <span class="cta-label">Ready to begin?</span>
+        <h2>Start building your development skills today</h2>
+        <p>
+          Explore AngularHub documentation and turn concepts into practical application knowledge.
+        </p>
+      </div>
+    </div>
+
+    <a mat-flat-button class="cta-button" routerLink="/docs/angular/introduction">
+      Explore documentation
+      <mat-icon>north_east</mat-icon>
+    </a>
+  </section>
+</div>
