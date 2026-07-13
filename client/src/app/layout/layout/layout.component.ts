@@ -1,39 +1,49 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
-import { BreakpointObserver } from '@angular/cdk/layout';
-
-import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
-
-import { RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 
 import { toSignal } from '@angular/core/rxjs-interop';
 
-import { map } from 'rxjs';
+import { filter, map, startWith } from 'rxjs';
 
+import { MatSidenavModule } from '@angular/material/sidenav';
+
+import { AuthService } from '../../core/services/auth.service';
 import { HeaderComponent } from '../header/header.component';
-import { Sidebar } from '../sidebar/sidebar.component';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
   selector: 'app-layout',
-  standalone: true,
-  imports: [RouterOutlet, MatSidenavModule, HeaderComponent, Sidebar],
+
+  imports: [RouterOutlet, MatSidenavModule, HeaderComponent, SidebarComponent],
+
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
+
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Layout {
-  private readonly breakpointObserver = inject(BreakpointObserver);
+export class LayoutComponent {
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
 
-  readonly isMobile = toSignal(
-    this.breakpointObserver.observe('(max-width: 959px)').pipe(map((result) => result.matches)),
+  private readonly currentUrl = toSignal(
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+      map((event) => event.urlAfterRedirects),
+      startWith(this.router.url),
+    ),
     {
-      initialValue: false,
+      initialValue: this.router.url,
     },
   );
 
-  closeSidebarOnMobile(sidenav: MatSidenav): void {
-    if (this.isMobile()) {
-      void sidenav.close();
+  readonly isAdmin = computed(() => this.authService.isAdmin());
+
+  readonly showSidebar = computed(() => {
+    if (this.isAdmin()) {
+      return true;
     }
-  }
+
+    return this.currentUrl().startsWith('/docs/');
+  });
 }

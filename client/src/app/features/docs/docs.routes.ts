@@ -2,28 +2,40 @@ import { Routes } from '@angular/router';
 
 export const DOCS_ROUTES: Routes = [
   {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'introduction',
+  },
+
+  {
     path: 'introduction',
     loadChildren: () =>
-      import('./introduction/introduction.routes').then(m => m.INTRODUCTION_ROUTES)
+      import('./introduction/introduction.routes').then((routes) => routes.INTRODUCTION_ROUTES),
   },
+
   {
     path: 'angular',
-    loadChildren: () =>
-      import('./angular/angular.routes').then(m => m.ANGULAR_ROUTES)
+    loadChildren: () => import('./angular/angular.routes').then((routes) => routes.ANGULAR_ROUTES),
   },
+
+  {
+    path: 'api',
+    loadChildren: () => import('./api/api.routes').then((routes) => routes.API_ROUTES),
+  },
+
   {
     path: 'rxjs',
-    loadChildren: () =>
-      import('./rxjs/rxjs.routes').then(m => m.RXJS_ROUTES)
+    loadChildren: () => import('./rxjs/rxjs.routes').then((routes) => routes.RXJS_ROUTES),
   },
+
   {
     path: 'material',
     loadChildren: () =>
-      import('./material/material.routes').then(m => m.MATERIAL_ROUTES)
+      import('./material/material.routes').then((routes) => routes.MATERIAL_ROUTES),
   },
+
   {
-    path: 'api',
-    loadChildren: () =>
-      import('./api/api.routes').then(m => m.API_ROUTES)
-  }
+    path: '**',
+    redirectTo: 'introduction',
+  },
 ];

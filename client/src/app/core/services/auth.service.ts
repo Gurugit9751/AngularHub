@@ -10,7 +10,7 @@ import { AppPermission, ROLE_PERMISSIONS } from '../constants/role-permissions.c
 
 import { AuthResponse } from '../models/auth-response.model';
 import { LoginRequest } from '../models/login-request.model';
-import { RegisterRequest } from '../models/register-request.model';
+import { RegisterRequest, RegisterResponse } from '../models/register-request.model';
 
 import { User, UserRole } from '../models/user.model';
 
@@ -47,8 +47,8 @@ export class AuthService {
     );
   }
 
-  register(request: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, request);
+  register(payload: RegisterRequest): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse>(`${this.apiUrl}/register`, payload);
   }
 
   logout(): void {

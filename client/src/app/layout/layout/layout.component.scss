@@ -1,21 +1,90 @@
-.layout-container {
+:host {
+  display: block;
   min-height: 100vh;
-  background: #f5f7fb;
 }
 
-.application-sidebar {
-  width: 250px;
-  border-right: none;
-  background: #0f172a;
+.application-shell {
+  min-height: 100vh;
+
+  background: #ffffff;
 }
 
-.page-content {
-  min-height: calc(100vh - 64px);
-  padding: 30px;
+.layout-body {
+  box-sizing: border-box;
+
+  width: 100%;
+  min-height: calc(100vh - 72px);
+}
+
+.layout-body.with-sidebar {
+  display: grid;
+  grid-template-columns: 330px minmax(0, 1fr);
+  gap: 28px;
+
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.layout-sidebar {
+  position: sticky;
+  top: 96px;
+
+  align-self: start;
+
+  width: 330px;
+}
+
+.layout-main-content {
+  box-sizing: border-box;
+
+  min-width: 0;
+  min-height: calc(100vh - 72px);
+  padding: 28px;
+}
+
+.layout-body.with-sidebar .layout-main-content {
+  padding: 0;
+}
+
+.admin-layout-sidebar {
+  /*
+   * Add your existing Admin sidebar background here
+   * when the Admin sidebar already uses a dark theme.
+   */
+}
+
+@media (max-width: 900px) {
+  .layout-body.with-sidebar {
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 16px;
+
+    padding: 16px;
+  }
+
+  .layout-sidebar {
+    width: 280px;
+  }
+
+  .layout-main-content {
+    padding: 18px;
+  }
 }
 
 @media (max-width: 700px) {
-  .page-content {
-    padding: 18px;
+  .layout-body.with-sidebar {
+    display: block;
+  }
+
+  .layout-sidebar {
+    position: static;
+
+    width: 100%;
+    margin-bottom: 18px;
+  }
+
+  .docs-sidebar-card {
+    height: auto;
+    max-height: 420px;
   }
 }

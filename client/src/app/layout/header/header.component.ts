@@ -1,55 +1,45 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Output,
-  inject
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { AuthService } from '../../core/services/auth.service';
+import { USER_HEADER_MENU } from '../../core/data/header-menu';
 
 @Component({
   selector: 'app-header',
-  standalone: true,
+
   imports: [
+    RouterLink,
+    RouterLinkActive,
     MatButtonModule,
     MatIconModule,
+    MatMenuModule,
     MatToolbarModule,
-    MatTooltipModule
   ],
+
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
-  @Output()
-  readonly menuToggle = new EventEmitter<void>();
+  readonly userHeaderMenu = USER_HEADER_MENU;
 
-  readonly currentUser =
-    this.authService.currentUser;
+  readonly currentUser = this.authService.currentUser;
 
-  toggleMenu(): void {
-    this.menuToggle.emit();
-  }
+  readonly isAdmin = computed(() => this.authService.isAdmin());
 
   logout(): void {
     this.authService.logout();
 
-    void this.router.navigateByUrl(
-      '/auth/login',
-      {
-        replaceUrl: true
-      }
-    );
+    void this.router.navigate(['/auth/login']);
   }
 }

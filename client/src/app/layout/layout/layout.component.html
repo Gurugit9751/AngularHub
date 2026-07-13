@@ -1,25 +1,15 @@
-<mat-sidenav-container class="layout-container">
-  <mat-sidenav
-    #drawer
-    class="application-sidebar"
-    [mode]="isMobile() ? 'over' : 'side'"
-    [opened]="!isMobile()"
-    [fixedInViewport]="isMobile()"
-  >
-    <app-sidebar
-      (navigationSelected)="
-        closeSidebarOnMobile(drawer)
-      "
-    ></app-sidebar>
-  </mat-sidenav>
+<div class="application-shell">
+  <app-header />
 
-  <mat-sidenav-content>
-    <app-header
-      (menuToggle)="drawer.toggle()"
-    ></app-header>
+  <div class="layout-body" [class.with-sidebar]="showSidebar()">
+    @if (showSidebar()) {
+      <aside class="layout-sidebar" [class.admin-layout-sidebar]="isAdmin()">
+        <app-sidebar />
+      </aside>
+    }
 
-    <main class="page-content">
-      <router-outlet></router-outlet>
+    <main class="layout-main-content">
+      <router-outlet />
     </main>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+  </div>
+</div>

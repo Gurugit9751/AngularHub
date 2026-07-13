@@ -1,46 +1,50 @@
-<mat-toolbar class="app-header">
-  <button
-    mat-icon-button
-    type="button"
-    aria-label="Toggle navigation menu"
-    matTooltip="Menu"
-    (click)="toggleMenu()"
-  >
-    <mat-icon>menu</mat-icon>
-  </button>
+<mat-toolbar class="main-header">
+  <a class="brand" [routerLink]="isAdmin() ? '/dashboard' : '/home'">
+    <span class="brand-logo"> A </span>
 
-  <a class="brand" href="/dashboard">
-    AngularHub
+    <span class="brand-name"> AngularHub </span>
   </a>
 
-  <span class="toolbar-spacer"></span>
-
-  @if (currentUser(); as user) {
-    <div class="user-summary">
-      <div class="user-avatar">
-        {{ user.firstName.charAt(0) }}
-        {{ user.lastName.charAt(0) }}
-      </div>
-
-      <div class="user-information">
-        <span class="user-name">
-          {{ user.firstName }} {{ user.lastName }}
-        </span>
-
-        <span class="user-role">
-          {{ user.role }}
-        </span>
-      </div>
-    </div>
+  @if (!isAdmin()) {
+    <nav class="documentation-header-menu" aria-label="Main documentation navigation">
+      @for (item of userHeaderMenu; track item.route) {
+        <a
+          mat-button
+          class="header-menu-link"
+          [routerLink]="item.route"
+          routerLinkActive="active-header-menu"
+          [routerLinkActiveOptions]="{
+            exact: item.exact ?? false,
+          }"
+        >
+          {{ item.label }}
+        </a>
+      }
+    </nav>
+  } @else {
+    <div class="admin-header-title">Administration</div>
   }
+
+  <span class="header-spacer"></span>
 
   <button
     mat-icon-button
     type="button"
-    aria-label="Logout"
-    matTooltip="Logout"
-    (click)="logout()"
+    [matMenuTriggerFor]="accountMenu"
+    aria-label="Open account menu"
   >
-    <mat-icon>logout</mat-icon>
+    <mat-icon>account_circle</mat-icon>
   </button>
+
+  <mat-menu #accountMenu="matMenu">
+    <button mat-menu-item routerLink="/profile">
+      <mat-icon>person</mat-icon>
+      <span>Profile</span>
+    </button>
+
+    <button mat-menu-item type="button" (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </button>
+  </mat-menu>
 </mat-toolbar>
