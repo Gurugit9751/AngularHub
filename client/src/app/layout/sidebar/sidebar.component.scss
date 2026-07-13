@@ -1,46 +1,55 @@
 :host {
   display: block;
+  width: 100%;
   height: 100%;
 }
 
-.docs-sidebar-card {
+/*
+ * User documentation sidebar.
+ */
+.docs-sidebar {
   box-sizing: border-box;
-
   width: 100%;
-  height: calc(100vh - 112px);
-
+  height: calc(100vh - 72px);
   overflow: hidden;
+  background: #f7f8fa;
+}
 
-  border-radius: 12px;
+.sidebar-title-wrapper {
+  padding: 25px 22px 20px;
+  border-bottom: 1px solid #e2e5e9;
+}
 
-  background: #f5f5f6;
-
-  box-shadow: 0 1px 3px rgb(0 0 0 / 5%);
+.sidebar-eyebrow {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: #8a93a3;
 }
 
 .sidebar-title {
-  padding: 20px 22px;
-
-  border-bottom: 1px solid #e3e3e5;
-
-  font-size: 19px;
-  font-weight: 650;
-
-  color: #181818;
+  margin: 0;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: #18202e;
 }
 
 .docs-sidebar-scroll {
-  height: calc(100% - 65px);
-
+  box-sizing: border-box;
+  height: calc(100% - 91px);
+  padding: 13px 12px 24px;
   overflow-x: hidden;
   overflow-y: auto;
-
-  scrollbar-color: #999 transparent;
+  scrollbar-color: #b8bdc7 transparent;
   scrollbar-width: thin;
 }
 
 .docs-sidebar-scroll::-webkit-scrollbar {
-  width: 9px;
+  width: 7px;
 }
 
 .docs-sidebar-scroll::-webkit-scrollbar-track {
@@ -48,14 +57,13 @@
 }
 
 .docs-sidebar-scroll::-webkit-scrollbar-thumb {
-  border: 2px solid #f5f5f6;
-  border-radius: 10px;
-
-  background: #999999;
+  border: 2px solid #f7f8fa;
+  border-radius: 999px;
+  background: #b8bdc7;
 }
 
 .docs-sidebar-section {
-  border-bottom: 1px solid #e3e3e5;
+  margin-bottom: 3px;
 }
 
 .docs-section-header,
@@ -63,23 +71,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   box-sizing: border-box;
-
   width: 100%;
-  min-height: 58px;
-  padding: 0 18px;
-
+  min-height: 47px;
+  padding: 0 13px;
   border: 0;
-
+  border-radius: 8px;
   text-align: left;
   text-decoration: none;
-
-  color: #202020;
+  color: #404756;
   background: transparent;
-
   cursor: pointer;
-
   transition:
     background-color 150ms ease,
     color 150ms ease;
@@ -87,98 +89,138 @@
 
 .docs-section-header:hover,
 .docs-section-link:hover {
-  background: #ebebed;
+  color: #5b4ee8;
+  background: #eeeff3;
 }
 
 .section-title-wrapper {
   display: flex;
   align-items: center;
-  gap: 14px;
+  min-width: 0;
+  gap: 12px;
 }
 
 .section-icon {
-  width: 23px;
-  height: 23px;
-
-  font-size: 23px;
-
-  color: #88888b;
+  flex: 0 0 auto;
+  width: 21px;
+  height: 21px;
+  font-size: 21px;
+  color: #828997;
 }
 
 .section-title {
-  font-size: 16px;
-  font-weight: 500;
+  overflow: hidden;
+  font-size: 14.5px;
+  font-weight: 550;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .section-chevron {
-  color: #202020;
+  flex: 0 0 auto;
+  color: #78808e;
 }
 
 .active-section>.docs-section-header,
 .docs-section-link.active-section-link {
-  color: #635bff;
+  font-weight: 600;
+  color: #5b4ee8;
+  background: #eae8ff;
 }
 
 .active-section>.docs-section-header .section-icon,
 .active-section>.docs-section-header .section-chevron,
 .docs-section-link.active-section-link .section-icon {
-  color: #635bff;
+  color: #5b4ee8;
 }
 
 .docs-section-children {
-  padding: 4px 14px 12px 51px;
+  position: relative;
+  margin: 4px 0 8px 23px;
+  padding: 3px 0 3px 18px;
+  border-left: 1px solid #d6d9df;
 }
 
 .docs-child-link {
   display: flex;
+  position: relative;
   align-items: center;
-
-  min-height: 44px;
-  padding: 0 12px;
-
-  border-radius: 8px;
-
-  font-size: 15px;
+  min-height: 39px;
+  gap: 9px;
+  padding: 0 10px;
+  border-radius: 7px;
+  font-size: 14px;
+  font-weight: 500;
   text-decoration: none;
-
-  color: #242424;
-
+  color: #555d6b;
   transition:
     color 150ms ease,
     background-color 150ms ease;
 }
 
 .docs-child-link:hover {
-  color: #635bff;
-  background: #ecebfd;
+  color: #5b4ee8;
+  background: #eeecff;
+}
+
+.child-indicator {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #a9afba;
 }
 
 .docs-child-link.active-child-link {
-  font-weight: 600;
-
-  color: #635bff;
-  background: #e7e5ff;
+  font-weight: 650;
+  color: #5b4ee8;
+  background: #e8e5ff;
 }
 
+.docs-child-link.active-child-link .child-indicator {
+  background: #675cf5;
+}
+
+/*
+ * Existing admin sidebar.
+ */
 .admin-sidebar {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  height: calc(100vh - 72px);
   gap: 5px;
-
-  padding: 12px;
+  padding: 16px 12px;
+  overflow-y: auto;
 }
 
 .admin-sidebar-link {
   display: flex;
   align-items: center;
-  gap: 12px;
-
   min-height: 46px;
+  gap: 12px;
   padding: 0 14px;
-
   border-radius: 9px;
-
   text-decoration: none;
-
   color: inherit;
+  transition: background-color 150ms ease;
+}
+
+.admin-sidebar-link:hover,
+.admin-sidebar-link.active-admin-link {
+  background: rgb(255 255 255 / 10%);
+}
+
+@media (max-width: 768px) {
+
+  .docs-sidebar,
+  .admin-sidebar {
+    height: auto;
+    max-height: 420px;
+  }
+
+  .docs-sidebar-scroll {
+    height: auto;
+    max-height: 330px;
+  }
 }

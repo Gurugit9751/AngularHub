@@ -1,9 +1,18 @@
 <div class="application-shell">
   <app-header />
 
-  <div class="layout-body" [class.with-sidebar]="showSidebar()">
+  <div
+    class="layout-body"
+    [class.with-sidebar]="showSidebar()"
+    [class.admin-layout]="isAdmin()"
+    [class.documentation-layout]="!isAdmin() && isDocumentationPage()"
+  >
     @if (showSidebar()) {
-      <aside class="layout-sidebar" [class.admin-layout-sidebar]="isAdmin()">
+      <aside
+        class="layout-sidebar"
+        [class.admin-layout-sidebar]="isAdmin()"
+        aria-label="Application navigation"
+      >
         <app-sidebar />
       </aside>
     }

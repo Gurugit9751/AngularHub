@@ -1,12 +1,23 @@
 <mat-toolbar class="main-header">
-  <a class="brand" [routerLink]="isAdmin() ? '/dashboard' : '/home'">
-    <span class="brand-logo"> A </span>
+  <a class="brand" [routerLink]="isAdmin() ? '/dashboard' : '/home'" aria-label="AngularHub home">
+    <span class="brand-logo">A</span>
 
     <span class="brand-name"> AngularHub </span>
   </a>
 
-  @if (!isAdmin()) {
-    <nav class="documentation-header-menu" aria-label="Main documentation navigation">
+  <nav class="header-navigation" aria-label="Main navigation">
+    @if (isAdmin()) {
+      @for (item of adminHeaderMenu; track item.route) {
+        <a
+          mat-button
+          class="header-menu-link"
+          [routerLink]="item.route"
+          routerLinkActive="active-header-menu"
+        >
+          {{ item.label }}
+        </a>
+      }
+    } @else {
       @for (item of userHeaderMenu; track item.route) {
         <a
           mat-button
@@ -20,10 +31,8 @@
           {{ item.label }}
         </a>
       }
-    </nav>
-  } @else {
-    <div class="admin-header-title">Administration</div>
-  }
+    }
+  </nav>
 
   <span class="header-spacer"></span>
 

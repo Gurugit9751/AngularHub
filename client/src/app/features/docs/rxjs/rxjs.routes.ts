@@ -1,46 +1,72 @@
 import { Routes } from '@angular/router';
 
-export const RXJS_ROUTES: Routes = [
+const loadOperatorsComponent = () =>
+  import('./operators/operators.component').then((component) => component.OperatorsComponent);
 
+export const RXJS_ROUTES: Routes = [
   {
     path: '',
     redirectTo: 'observable',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
 
   {
     path: 'observable',
     loadComponent: () =>
-      import('./observable/observable.component')
-        .then(c => c.ObservableComponent)
+      import('./observable/observable.component').then(
+        (component) => component.ObservableComponent,
+      ),
   },
 
   {
     path: 'subject',
     loadComponent: () =>
-      import('./subject/subject.component')
-        .then(c => c.SubjectComponent)
+      import('./subject/subject.component').then((component) => component.SubjectComponent),
   },
 
   {
     path: 'behaviorsubject',
     loadComponent: () =>
-      import('./behaviorsubject/behaviorsubject.component')
-        .then(c => c.BehaviorsubjectComponent)
+      import('./behaviorsubject/behaviorsubject.component').then(
+        (component) => component.BehaviorsubjectComponent,
+      ),
   },
 
   {
     path: 'replaysubject',
     loadComponent: () =>
-      import('./replaysubject/replaysubject.component')
-        .then(c => c.ReplaysubjectComponent)
+      import('./replaysubject/replaysubject.component').then(
+        (component) => component.ReplaysubjectComponent,
+      ),
   },
 
   {
     path: 'operators',
-    loadComponent: () =>
-      import('./operators/operators.component')
-        .then(c => c.OperatorsComponent)
-  }
+    loadComponent: loadOperatorsComponent,
+  },
 
+  {
+    path: 'switch-map',
+    loadComponent: loadOperatorsComponent,
+  },
+
+  {
+    path: 'merge-map',
+    loadComponent: loadOperatorsComponent,
+  },
+
+  {
+    path: 'concat-map',
+    loadComponent: loadOperatorsComponent,
+  },
+
+  {
+    path: 'error-handling',
+    loadComponent: loadOperatorsComponent,
+  },
+
+  {
+    path: '**',
+    redirectTo: 'observable',
+  },
 ];

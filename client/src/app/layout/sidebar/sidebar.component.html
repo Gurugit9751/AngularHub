@@ -1,34 +1,30 @@
 @if (isAdmin()) {
-  <!-- Keep your existing working Admin sidebar here. -->
-
   <nav class="admin-sidebar" aria-label="Admin navigation">
-    <a class="admin-sidebar-link" routerLink="/dashboard" routerLinkActive="active-admin-link">
-      <mat-icon>dashboard</mat-icon>
-      <span>Dashboard</span>
-    </a>
+    @for (item of adminMenu; track item.route) {
+      <a class="admin-sidebar-link" [routerLink]="item.route" routerLinkActive="active-admin-link">
+        <mat-icon>
+          {{ item.icon }}
+        </mat-icon>
 
-    <a class="admin-sidebar-link" routerLink="/profile" routerLinkActive="active-admin-link">
-      <mat-icon>person</mat-icon>
-      <span>Profile</span>
-    </a>
-
-    <a class="admin-sidebar-link" routerLink="/users" routerLinkActive="active-admin-link">
-      <mat-icon>group</mat-icon>
-      <span>Users</span>
-    </a>
-
-    <a class="admin-sidebar-link" routerLink="/settings" routerLinkActive="active-admin-link">
-      <mat-icon>settings</mat-icon>
-      <span>Settings</span>
-    </a>
+        <span>
+          {{ item.label }}
+        </span>
+      </a>
+    }
   </nav>
-} @else if (isAngularSection()) {
-  <aside class="docs-sidebar-card" aria-label="Angular documentation navigation">
-    <div class="sidebar-title">Angular</div>
+} @else {
+  <aside class="docs-sidebar">
+    <div class="sidebar-title-wrapper">
+      <span class="sidebar-eyebrow"> Documentation </span>
 
-    <div class="docs-sidebar-scroll">
-      @for (item of angularMenu; track item.id) {
-        <section class="docs-sidebar-section" [class.active-section]="isGroupActive(item)">
+      <h2 class="sidebar-title">
+        {{ sidebarTitle() }}
+      </h2>
+    </div>
+
+    <nav class="docs-sidebar-scroll" [attr.aria-label]="sidebarTitle() + ' documentation'">
+      @for (item of sidebarMenu(); track item.id) {
+        <div class="docs-sidebar-section" [class.active-section]="isGroupActive(item)">
           @if (item.children?.length) {
             <button
               type="button"
@@ -47,20 +43,23 @@
               </span>
 
               <mat-icon class="section-chevron">
-                {{ isExpanded(item) ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
+                {{ isExpanded(item) ? 'expand_less' : 'expand_more' }}
               </mat-icon>
             </button>
 
             @if (isExpanded(item)) {
               <div class="docs-section-children">
-                @for (child of item.children; track child.route) {
+                @for (child of item.children; track child.id) {
                   <a
                     class="docs-child-link"
                     [routerLink]="child.route"
                     routerLinkActive="active-child-link"
-                    ariaCurrentWhenActive="page"
                   >
-                    {{ child.label }}
+                    <span class="child-indicator"></span>
+
+                    <span>
+                      {{ child.label }}
+                    </span>
                   </a>
                 }
               </div>
@@ -70,7 +69,6 @@
               class="docs-section-link"
               [routerLink]="item.route"
               routerLinkActive="active-section-link"
-              ariaCurrentWhenActive="page"
             >
               <span class="section-title-wrapper">
                 <mat-icon class="section-icon">
@@ -83,8 +81,8 @@
               </span>
             </a>
           }
-        </section>
+        </div>
       }
-    </div>
+    </nav>
   </aside>
 }

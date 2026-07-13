@@ -4,8 +4,15 @@ import { RedirectFunction, Routes } from '@angular/router';
 
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
+
 import { AuthService } from './core/services/auth.service';
 
+/*
+ * Redirect authenticated users based on their role.
+ *
+ * Admin -> /dashboard
+ * User  -> /home
+ */
 const landingPageRedirect: RedirectFunction = () => {
   const authService = inject(AuthService);
 
@@ -38,10 +45,7 @@ export const appRoutes: Routes = [
 
     children: [
       /*
-       * Role-based initial landing page
-       *
-       * Admin -> /dashboard
-       * User  -> /home
+       * Role-based initial route.
        */
       {
         path: '',
@@ -50,33 +54,41 @@ export const appRoutes: Routes = [
       },
 
       /*
-       * Normal user home page
+       * Normal user landing page.
+       *
+       * Sidebar must be hidden on this page.
        */
       {
         path: 'home',
+        title: 'Home | AngularHub',
 
         loadComponent: () =>
           import('./features/home/home.component').then((component) => component.HomeComponent),
       },
 
       /*
-       * Documentation routes
+       * User documentation portal.
        *
+       * /docs/html/...
+       * /docs/javascript/...
        * /docs/angular/...
-       * /docs/api/...
+       * /docs/node/...
+       * /docs/mongodb/...
        */
       {
         path: 'docs',
+        title: 'Documentation | AngularHub',
 
         loadChildren: () =>
           import('./features/docs/docs.routes').then((routes) => routes.DOCS_ROUTES),
       },
 
       /*
-       * Admin dashboard
+       * Admin-only dashboard.
        */
       {
         path: 'dashboard',
+        title: 'Dashboard | AngularHub',
 
         canActivate: [roleGuard],
 
@@ -89,20 +101,22 @@ export const appRoutes: Routes = [
       },
 
       /*
-       * Available for both admin and user
+       * Available for both admin and normal users.
        */
       {
         path: 'profile',
+        title: 'Profile | AngularHub',
 
         loadComponent: () =>
           import('./features/profile/profile').then((component) => component.Profile),
       },
 
       /*
-       * Admin-only user management
+       * Admin-only user management.
        */
       {
         path: 'users',
+        title: 'Users | AngularHub',
 
         canActivate: [roleGuard],
 
@@ -114,10 +128,11 @@ export const appRoutes: Routes = [
       },
 
       /*
-       * Admin-only settings
+       * Admin-only settings.
        */
       {
         path: 'settings',
+        title: 'Settings | AngularHub',
 
         canActivate: [roleGuard],
 
@@ -130,7 +145,7 @@ export const appRoutes: Routes = [
       },
 
       /*
-       * Protected unknown route
+       * Unknown protected routes redirect based on role.
        */
       {
         path: '**',
@@ -140,7 +155,7 @@ export const appRoutes: Routes = [
   },
 
   /*
-   * Public unknown route
+   * Unknown public routes.
    */
   {
     path: '**',

@@ -1,25 +1,35 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-
-import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 
 import { toSignal } from '@angular/core/rxjs-interop';
 
-import { filter, map, startWith } from 'rxjs';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { MatIconModule } from '@angular/material/icon';
 
+import { filter, map, startWith } from 'rxjs';
+
 import { AuthService } from '../../core/services/auth.service';
 
-import { ANGULAR_SIDEBAR_MENU, SidebarGroupItem } from '../../core/data/header-menu';
+import {
+  ADMIN_SIDEBAR_MENU,
+  DOCUMENTATION_MENUS,
+  DocumentationMenu,
+  SidebarGroupItem,
+} from '../../core/data/menu';
 
 @Component({
   selector: 'app-sidebar',
-
+  standalone: true,
   imports: [RouterLink, RouterLinkActive, MatIconModule],
-
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
-
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarComponent {
@@ -39,37 +49,59 @@ export class SidebarComponent {
 
   readonly isAdmin = computed(() => this.authService.isAdmin());
 
-  readonly isAngularSection = computed(() => this.currentUrl().startsWith('/docs/angular'));
+  readonly adminMenu = ADMIN_SIDEBAR_MENU;
 
-  readonly angularMenu = ANGULAR_SIDEBAR_MENU;
+  readonly activeDocumentationSection = computed<DocumentationMenu | undefined>(() => {
+    const url = this.currentUrl();
 
-  readonly expandedGroupId = signal<string | null>(
-    this.currentUrl().startsWith('/docs/angular/rxjs') ? 'rxjs' : null,
-  );
+    return DOCUMENTATION_MENUS.find((menu: DocumentationMenu) =>
+      url.startsWith(`/docs/${menu.section}`),
+    );
+  });
+
+  readonly sidebarTitle = computed(() => {
+    return this.activeDocumentationSection()?.title ?? 'Documentation';
+  });
+
+  readonly sidebarMenu = computed<readonly SidebarGroupItem[]>(() => {
+    return this.activeDocumentationSection()?.items ?? [];
+  });
+
+  readonly expandedGroupId = signal<string | null>(null);
+
+  constructor() {
+    effect(() => {
+      const url = this.currentUrl();
+
+      const activeGroup = this.sidebarMenu().find((item: SidebarGroupItem) =>
+        item.children?.some((child) => url.startsWith(child.route)),
+      );
+
+      if (activeGroup) {
+        this.expandedGroupId.set(activeGroup.id);
+      }
+    });
+  }
 
   toggleGroup(item: SidebarGroupItem): void {
     if (!item.children?.length) {
       return;
     }
 
-    this.expandedGroupId.update((currentId) => (currentId === item.id ? null : item.id));
+    this.expandedGroupId.update((currentGroupId) => (currentGroupId === item.id ? null : item.id));
   }
 
   isExpanded(item: SidebarGroupItem): boolean {
-    if (!item.children?.length) {
-      return false;
-    }
-
-    return (
-      this.expandedGroupId() === item.id || this.currentUrl().startsWith(`/docs/angular/${item.id}`)
-    );
+    return this.expandedGroupId() === item.id;
   }
 
   isGroupActive(item: SidebarGroupItem): boolean {
+    const url = this.currentUrl();
+
     if (item.route) {
-      return this.currentUrl().startsWith(item.route);
+      return url.startsWith(item.route);
     }
 
-    return this.currentUrl().startsWith(`/docs/angular/${item.id}`);
+    return item.children?.some((child) => url.startsWith(child.route)) ?? false;
   }
 }
